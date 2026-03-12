@@ -22,6 +22,31 @@ body{
 	padding:40px 16px;
 }
 
+#confetti-layer{
+	position:fixed;
+	inset:0;
+	pointer-events:none;
+	overflow:hidden;
+	z-index:50;
+}
+
+.confetti-piece{
+	position:absolute;
+	top:-12px;
+	width:10px;
+	height:14px;
+	border-radius:2px;
+	opacity:0.95;
+	animation-name:confetti-fall;
+	animation-timing-function:linear;
+	animation-fill-mode:forwards;
+}
+
+@keyframes confetti-fall{
+	0%{transform:translateY(0) rotate(0deg)}
+	100%{transform:translateY(120vh) rotate(540deg)}
+}
+
 #app{
 	width:100%;
 	max-width:var(--max-width);
@@ -29,10 +54,33 @@ body{
 	border-radius:12px;
 	box-shadow:0 6px 20px rgba(2,6,23,0.08);
 	padding:24px;
+	position:relative;
 }
 
 h1{margin:0 0 12px 0;font-size:20px}
 h2{font-size:14px;color:var(--muted);margin:8px 0}
+
+#login-celebration{
+	display:none;
+	margin:0 0 12px 0;
+	padding:10px 12px;
+	border:1px solid #a7f3d0;
+	border-radius:10px;
+	background:#ecfdf5;
+	color:#065f46;
+	font-weight:700;
+	text-align:center;
+}
+
+#login-celebration.show{
+	display:block;
+	animation:celebration-pop 450ms ease-out;
+}
+
+@keyframes celebration-pop{
+	0%{transform:scale(0.96);opacity:0}
+	100%{transform:scale(1);opacity:1}
+}
 
 #status{
 	display:none;
@@ -55,13 +103,27 @@ h2{font-size:14px;color:var(--muted);margin:8px 0}
 	color:#991b1b;
 }
 
+.auth-logo-wrap{
+	display:flex;
+	justify-content:center;
+	margin:6px 0 14px 0;
+}
+
+.auth-logo{
+	width:100%;
+	max-width:360px;
+	height:auto;
+	border-radius:12px;
+	box-shadow:0 3px 12px rgba(2, 6, 23, 0.08);
+}
+
 /* Auth + Main columns */
 #auth, #main{
 	display:block;
 	gap:8px;
 }
 
-input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="number"]{
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="number"], select{
 	width:100%;
 	padding:10px 12px;
 	margin:6px 0 12px 0;
@@ -69,6 +131,19 @@ input[type="text"], input[type="email"], input[type="password"], input[type="dat
 	border-radius:8px;
 	background:var(--card);
 	font-size:14px;
+}
+
+.show-password-toggle{
+	display:flex;
+	align-items:center;
+	gap:8px;
+	font-size:14px;
+	color:var(--muted);
+	margin:0 0 12px 0;
+}
+
+.show-password-toggle input{
+	margin:0;
 }
 
 button{
@@ -85,6 +160,11 @@ button{
 button[disabled]{opacity:0.6;cursor:not-allowed}
 
 #logout{background:#ef4444}
+.delete-workout{
+	background:#ef4444;
+	margin-right:0;
+	padding:8px 12px;
+}
 
 /* Workouts list */
 #workouts{list-style:none;padding:0;margin:12px 0}

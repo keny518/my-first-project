@@ -7,14 +7,23 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="confetti-layer" aria-hidden="true"></div>
   <div id="app">
     <h1>Workout Tracker</h1>
+    <div id="login-celebration" role="status" aria-live="polite">You're working out!</div>
     <div id="status" role="status" aria-live="polite"></div>
     <div id="auth">
+      <div class="auth-logo-wrap">
+        <img class="auth-logo" src="logo.svg" alt="Workout Tracker logo" />
+      </div>
       <h2>Auth</h2>
       <input id="name" placeholder="Name (register)" />
       <input id="email" placeholder="Email" />
       <input id="password" type="password" placeholder="Password" />
+      <label class="show-password-toggle">
+        <input id="toggle_password" type="checkbox" />
+        Show password
+      </label>
       <button id="register">Register</button>
       <button id="login">Login</button>
     </div>
@@ -22,7 +31,20 @@
     <div id="main" style="display:none">
       <button id="logout">Logout</button>
       <h2>Create Workout</h2>
-      <input id="w_type" placeholder="Type (e.g., cardio)" />
+      <select id="w_type">
+        <option value="">Select workout type</option>
+        <option value="Strength Training">Strength Training</option>
+        <option value="Cardio">Cardio</option>
+        <option value="HIIT">HIIT</option>
+        <option value="Upper Body">Upper Body</option>
+        <option value="Lower Body">Lower Body</option>
+        <option value="Full Body">Full Body</option>
+        <option value="Core">Core</option>
+        <option value="Mobility">Mobility</option>
+        <option value="Rest Day">Rest Day</option>
+        <option value="__custom__">Other (type your own)</option>
+      </select>
+      <input id="w_type_custom" type="text" placeholder="Custom workout type" style="display:none" />
       <input id="w_date" type="date" />
       <input id="w_dur" type="number" placeholder="Duration minutes" />
       <button id="create_workout">Create</button>

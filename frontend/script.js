@@ -11,6 +11,32 @@ function setStatus(message, type = 'success') {
   el.className = `show ${type}`;
 }
 
+function runLoginCelebration() {
+  const banner = document.getElementById('login-celebration');
+  const confettiLayer = document.getElementById('confetti-layer');
+  const colors = ['#0ea5a4', '#22c55e', '#f59e0b', '#3b82f6', '#ef4444', '#a855f7'];
+
+  banner.classList.add('show');
+  window.setTimeout(() => {
+    banner.classList.remove('show');
+  }, 2600);
+
+  for (let i = 0; i < 70; i += 1) {
+    const piece = document.createElement('span');
+    piece.className = 'confetti-piece';
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = `${1.8 + Math.random() * 1.7}s`;
+    piece.style.animationDelay = `${Math.random() * 0.25}s`;
+    piece.style.transform = `translateY(0) rotate(${Math.random() * 360}deg)`;
+    confettiLayer.appendChild(piece);
+
+    window.setTimeout(() => {
+      piece.remove();
+    }, 4000);
+  }
+}
+
 async function api(path, opts = {}){
   const headers = opts.headers || {};
   if (state.token) headers['Authorization'] = 'Bearer ' + state.token;
@@ -51,6 +77,7 @@ document.getElementById('login').onclick = async () => {
       state.token = res.token;
       showMain();
       await loadWorkouts();
+      runLoginCelebration();
       setStatus('Logged in successfully.');
     }
   } catch (err) {
@@ -67,12 +94,35 @@ document.getElementById('logout').onclick = () => {
 function showMain(){ document.getElementById('auth').style.display='none'; document.getElementById('main').style.display='block'; }
 function showAuth(){ document.getElementById('auth').style.display='block'; document.getElementById('main').style.display='none'; }
 
+const workoutTypeSelect = document.getElementById('w_type');
+const workoutTypeCustomInput = document.getElementById('w_type_custom');
+const passwordInput = document.getElementById('password');
+const togglePasswordInput = document.getElementById('toggle_password');
+
+togglePasswordInput.onchange = () => {
+  passwordInput.type = togglePasswordInput.checked ? 'text' : 'password';
+};
+
+workoutTypeSelect.onchange = () => {
+  const isCustom = workoutTypeSelect.value === '__custom__';
+  workoutTypeCustomInput.style.display = isCustom ? 'block' : 'none';
+  if (!isCustom) {
+    workoutTypeCustomInput.value = '';
+  }
+};
+
 document.getElementById('create_workout').onclick = async () => {
   try {
     setStatus('Creating workout...');
-    const workout_type = document.getElementById('w_type').value;
+    const selectedType = workoutTypeSelect.value;
+    const customType = workoutTypeCustomInput.value.trim();
+    const workout_type = selectedType === '__custom__' ? customType : selectedType;
     const workout_date = document.getElementById('w_date').value;
     const duration_minutes = parseInt(document.getElementById('w_dur').value, 10);
+    if (!workout_type) {
+      setStatus('Please select or enter a workout type.', 'error');
+      return;
+    }
     await api('/workouts', { method: 'POST', body: JSON.stringify({ workout_type, workout_date, duration_minutes }) });
     await loadWorkouts();
     setStatus('Workout created.');
@@ -80,6 +130,20 @@ document.getElementById('create_workout').onclick = async () => {
     setStatus(err.message, 'error');
   }
 };
+
+async function deleteWorkout(workoutId) {
+  const confirmed = window.confirm('Delete this workout? This cannot be undone.');
+  if (!confirmed) return;
+
+  try {
+    setStatus('Deleting workout...');
+    await api(`/workouts/${workoutId}`, { method: 'DELETE' });
+    await loadWorkouts();
+    setStatus('Workout deleted.');
+  } catch (err) {
+    setStatus(err.message, 'error');
+  }
+}
 
 async function loadWorkouts(){
   const ul = document.getElementById('workouts');
@@ -90,7 +154,17 @@ async function loadWorkouts(){
     if (Array.isArray(res)){
       res.forEach(w => {
         const li = document.createElement('li');
-        li.textContent = `${w.workout_date} — ${w.workout_type || 'N/A'} (${w.duration_minutes || 0}m)`;
+        const label = document.createElement('span');
+        label.textContent = `${w.workout_date} — ${w.workout_type || 'N/A'} (${w.duration_minutes || 0}m)`;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'delete-workout';
+        deleteButton.textContent = 'Delete';
+        deleteButton.onclick = () => deleteWorkout(w.workout_id);
+
+        li.appendChild(label);
+        li.appendChild(deleteButton);
         ul.appendChild(li);
       });
     }
