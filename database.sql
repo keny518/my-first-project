@@ -1,3 +1,9 @@
+-- Create a new database named "Workout"
+-- and set its owner to "kenny"
+CREATE DATABASE "Workout" OWNER TO kenny;
+
+-- Create a table named "users" to store user information
+-- with columns for user_id, name, email, and password
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(100),
@@ -5,6 +11,8 @@ CREATE TABLE users (
     password VARCHAR(250)
 );
 
+-- Create a table named "workouts" to store workout information
+-- with columns for workout_id, user_id, workout_date, workout_type, and duration_minutes
 CREATE TABLE workouts (
     workout_id SERIAL PRIMARY KEY,
     user_id INT,
@@ -14,6 +22,8 @@ CREATE TABLE workouts (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+-- Create a table named "exercises" to store exercise information
+-- with columns for exercise_id, workout_id, exercise_name, sets, reps, and weight
 CREATE TABLE exercises (
     exercise_id SERIAL PRIMARY KEY,
     workout_id INT,
