@@ -1,0 +1,89 @@
+:root{
+	--bg:#f6f9fc;
+	--card:#ffffff;
+	--muted:#6b7280;
+	--accent:#0ea5a4;
+	--accent-contrast:#ffffff;
+	--max-width:900px;
+	font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+	margin:0;
+	background:var(--bg);
+	color:#0f172a;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+	display:flex;
+	align-items:flex-start;
+	justify-content:center;
+	padding:40px 16px;
+}
+
+#app{
+	width:100%;
+	max-width:var(--max-width);
+	background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.95));
+	border-radius:12px;
+	box-shadow:0 6px 20px rgba(2,6,23,0.08);
+	padding:24px;
+}
+
+h1{margin:0 0 12px 0;font-size:20px}
+h2{font-size:14px;color:var(--muted);margin:8px 0}
+
+/* Auth + Main columns */
+#auth, #main{
+	display:block;
+	gap:8px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="number"]{
+	width:100%;
+	padding:10px 12px;
+	margin:6px 0 12px 0;
+	border:1px solid #e6edf3;
+	border-radius:8px;
+	background:var(--card);
+	font-size:14px;
+}
+
+button{
+	background:var(--accent);
+	color:var(--accent-contrast);
+	border:none;
+	padding:10px 14px;
+	border-radius:8px;
+	font-weight:600;
+	cursor:pointer;
+	margin-right:8px;
+}
+
+button[disabled]{opacity:0.6;cursor:not-allowed}
+
+#logout{background:#ef4444}
+
+/* Workouts list */
+#workouts{list-style:none;padding:0;margin:12px 0}
+#workouts li{
+	background:var(--card);
+	padding:10px 12px;
+	border-radius:8px;
+	margin-bottom:8px;
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+	border:1px solid #eef2f6;
+}
+
+#workouts li small{color:var(--muted);margin-left:8px}
+
+/* Responsive */
+@media (min-width:720px){
+	#app{padding:32px}
+	h1{font-size:24px}
+	#auth, #main{display:block}
+}
+

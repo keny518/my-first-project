@@ -2,7 +2,7 @@ CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(100),
     email VARCHAR(100),
-    password VARCHAR(255)
+    password VARCHAR(250)
 );
 
 CREATE TABLE workouts (
@@ -22,12 +22,4 @@ CREATE TABLE exercises (
     reps INT,
     weight DECIMAL(5,2),
     FOREIGN KEY (workout_id) REFERENCES workouts(workout_id)
-); 
-
--- Example seed data (optional)
--- Uncomment and run if you want sample data
--- INSERT INTO users (name, email, password) VALUES ('Test User','test@example.com','$2b$10$examplehashedpassword');
-
--- Make email unique to prevent duplicates
-ALTER TABLE users
-    ADD CONSTRAINT users_email_unique UNIQUE (email);
+);

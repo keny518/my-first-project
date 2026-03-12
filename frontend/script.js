@@ -52,5 +52,4 @@ async function loadWorkouts(){
   }
 }
 
-// start on load
 showAuth();
