@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const path = require('path');
 
 const connectionString = process.env.DATABASE_URL;
-const fallbackPassword = String(process.env.PG_PASS || process.env.PGPASSWORD || '');
+const fallbackPassword = process.env.PG_PASS || process.env.PGPASSWORD || undefined;
 
 let poolConfig;
 if (connectionString) {
@@ -22,7 +23,7 @@ if (connectionString) {
     console.warn('Invalid DATABASE_URL format, falling back to PG_* variables.');
     poolConfig = {
       user: process.env.PG_USER || 'postgres',
-      password: fallbackPassword,
+      password: process.env.PG_PASS || 'yourpassword',
       host: process.env.PG_HOST || 'localhost',
       port: Number(process.env.PG_PORT || 5432),
       database: process.env.PG_DATABASE || 'my_first_project'
@@ -38,7 +39,13 @@ if (connectionString) {
   };
 }
 
+// If password is an empty string, remove it so `pg` doesn't attempt SCRAM with a non-string value.
+if (poolConfig && poolConfig.password === '') {
+  delete poolConfig.password;
+}
+
 const pool = new Pool(poolConfig);
+console.log('pg poolConfig password type:', typeof poolConfig.password, poolConfig.password === undefined ? 'undefined' : (poolConfig.password === '' ? 'empty' : 'masked'));
 
 const app = express();
 app.use(cors());
@@ -65,8 +72,20 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'server error' });
 });
 
-app.listen(PORT, () => {
-	console.log(`Server listening on port ${PORT}`);
-});
+async function startServer() {
+  try {
+    // Fail fast so misconfigured DB credentials show up immediately.
+    await pool.query('SELECT 1');
+    app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Database connection failed. Set PGPASSWORD (or PG_PASS) in .env or provide a valid DATABASE_URL.');
+    console.error(err.message);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 module.exports = app;
