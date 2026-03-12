@@ -58,7 +58,6 @@ Files of interest
 - `database.sql` — DDL for `users`, `workouts`, `exercises`.
 - `frontend/` — `index.html`, `script.js`, `style.css` (demonstration UI).
 
-Rubric mapping
 -------------------------
 - Server: Express server implemented (`server.js`).
 - Database: Postgres schema present with foreign keys (`database.sql`).
