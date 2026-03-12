@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
-const DATABASE_URL = process.env.DATABASE_URL || process.env.PG_URI || 'postgresql://localhost:5432/my_first_project';
+const DATABASE_URL = process.env.DATABASE_URL || process.env.PG_URI || 'postgresql://localhost:5432/workout';
 
 
 // make pool available to routes via app.locals
