@@ -9,7 +9,6 @@ const fallbackPassword = process.env.PG_PASS || process.env.PGPASSWORD || undefi
 
 let poolConfig;
 if (connectionString) {
-  // Parse URL ourselves so password is always a string for pg.
   try {
     const parsed = new URL(connectionString);
     poolConfig = {
@@ -39,7 +38,6 @@ if (connectionString) {
   };
 }
 
-// If password is an empty string, remove it so `pg` doesn't attempt SCRAM with a non-string value.
 if (poolConfig && poolConfig.password === '') {
   delete poolConfig.password;
 }
@@ -54,13 +52,10 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
 
-// make pool available to routes via app.locals
 app.locals.pool = pool;
 
-// static frontend
 app.use(express.static(path.join(__dirname, 'frontend')));
 
-// routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/workouts', require('./routes/workouts'));
 app.use('/api/exercises', require('./routes/exercises'));
@@ -74,7 +69,6 @@ app.use((err, req, res, next) => {
 
 async function startServer() {
   try {
-    // Fail fast so misconfigured DB credentials show up immediately.
     await pool.query('SELECT 1');
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);
