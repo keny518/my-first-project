@@ -24,6 +24,7 @@ CREATE TABLE exercises (
     weight DECIMAL(5,2),
     FOREIGN KEY (workout_id) REFERENCES workouts(workout_id)
 );
+
 CREATE TABLE goals (
     goal_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,

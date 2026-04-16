@@ -98,13 +98,26 @@ router.put('/:id', authMiddleware, async (req, res) => {
 router.delete('/:id', authMiddleware, async (req, res) => {
   const pool = req.app.locals.pool;
   try {
-    const result = await pool.query(
-      'DELETE FROM workouts WHERE workout_id=$1 AND user_id=$2 RETURNING *',
+    await pool.query('BEGIN');
+
+    const ownership = await pool.query(
+      'SELECT workout_id FROM workouts WHERE workout_id=$1 AND user_id=$2',
       [req.params.id, req.user.user_id]
     );
-    if (!result.rows[0]) return res.status(404).json({ error: 'not found or unauthorized' });
+    if (!ownership.rows[0]) {
+      await pool.query('ROLLBACK');
+      return res.status(404).json({ error: 'not found or unauthorized' });
+    }
+
+    await pool.query('DELETE FROM exercises WHERE workout_id=$1', [req.params.id]);
+    await pool.query('DELETE FROM workouts WHERE workout_id=$1 AND user_id=$2', [req.params.id, req.user.user_id]);
+
+    await pool.query('COMMIT');
     res.status(200).json({ success: true });
   } catch (err) {
+    try {
+      await pool.query('ROLLBACK');
+    } catch (_) {}
     res.status(500).json({ error: err.message });
   }
 });
