@@ -100,7 +100,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
       'UPDATE exercises SET exercise_name=$1, sets=$2, reps=$3, weight=$4 WHERE exercise_id=$5 RETURNING *',
       [exercise_name, sets, reps, weight, req.params.id]
     );
-    res.json(result.rows[0]);
+    res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -112,7 +112,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   try {
     const result = await pool.query('DELETE FROM exercises WHERE exercise_id=$1 AND workout_id IN (SELECT workout_id FROM workouts WHERE user_id=$2) RETURNING *', [req.params.id, req.user.user_id]);
     if (!result.rows[0]) return res.status(404).json({ error: 'not found or unauthorized' });
-    res.json({ success: true });
+    res.status(200).json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

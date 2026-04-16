@@ -15,7 +15,7 @@ router.get('/', authMiddleware, async (req, res) => {
   const pool = req.app.locals.pool;
   try {
     const result = await pool.query('SELECT * FROM workouts WHERE user_id=$1 ORDER BY workout_date DESC', [req.user.user_id]);
-    res.json(result.rows);
+    res.status(200).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -47,7 +47,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM workouts WHERE workout_id=$1 AND user_id=$2', [req.params.id, req.user.user_id]);
     if (!result.rows[0]) return res.status(404).json({ error: 'not found' });
-    res.json(result.rows[0]);
+    res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -88,7 +88,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
       [workout_date, workout_type, duration_minutes, req.params.id, req.user.user_id]
     );
     if (!result.rows[0]) return res.status(404).json({ error: 'not found or unauthorized' });
-    res.json(result.rows[0]);
+    res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -103,7 +103,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
       [req.params.id, req.user.user_id]
     );
     if (!result.rows[0]) return res.status(404).json({ error: 'not found or unauthorized' });
-    res.json({ success: true });
+    res.status(200).json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

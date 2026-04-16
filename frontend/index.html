@@ -30,27 +30,57 @@
 
     <div id="main" style="display:none">
       <button id="logout">Logout</button>
-      <h2>Create Workout</h2>
-      <select id="w_type">
-        <option value="">Select workout type</option>
-        <option value="Strength Training">Strength Training</option>
-        <option value="Cardio">Cardio</option>
-        <option value="HIIT">HIIT</option>
-        <option value="Upper Body">Upper Body</option>
-        <option value="Lower Body">Lower Body</option>
-        <option value="Full Body">Full Body</option>
-        <option value="Core">Core</option>
-        <option value="Mobility">Mobility</option>
-        <option value="Rest Day">Rest Day</option>
-        <option value="__custom__">Other (type your own)</option>
-      </select>
-      <input id="w_type_custom" type="text" placeholder="Custom workout type" style="display:none" />
-      <input id="w_date" type="date" />
-      <input id="w_dur" type="number" placeholder="Duration minutes" />
-      <button id="create_workout">Create</button>
+      <div class="grid">
+        <section class="card">
+          <h2>Create Workout</h2>
+          <select id="w_type">
+            <option value="">Select workout type</option>
+            <option value="Strength Training">Strength Training</option>
+            <option value="Cardio">Cardio</option>
+            <option value="HIIT">HIIT</option>
+            <option value="Upper Body">Upper Body</option>
+            <option value="Lower Body">Lower Body</option>
+            <option value="Full Body">Full Body</option>
+            <option value="Core">Core</option>
+            <option value="Mobility">Mobility</option>
+            <option value="Rest Day">Rest Day</option>
+            <option value="__custom__">Other (type your own)</option>
+          </select>
+          <input id="w_type_custom" type="text" placeholder="Custom workout type" style="display:none" />
+          <input id="w_date" type="date" />
+          <input id="w_dur" type="number" placeholder="Duration minutes" />
+          <button id="create_workout">Create</button>
 
-      <h2>Your Workouts</h2>
-      <ul id="workouts"></ul>
+          <h2>Your Workouts (click to open)</h2>
+          <ul id="workouts"></ul>
+        </section>
+
+        <section class="card" id="workout_detail" aria-live="polite">
+          <h2>Workout Detail</h2>
+          <div id="workout_detail_body" class="muted">Select a workout to view/edit exercises.</div>
+
+          <div id="exercise_tools" style="display:none">
+            <h2>Add Exercise</h2>
+            <input id="ex_name" type="text" placeholder="Exercise name (e.g. Squat)" />
+            <input id="ex_sets" type="number" placeholder="Sets" />
+            <input id="ex_reps" type="number" placeholder="Reps" />
+            <input id="ex_weight" type="number" placeholder="Weight (optional)" />
+            <button id="create_exercise">Add exercise</button>
+            <h2>Exercises</h2>
+            <ul id="exercises"></ul>
+          </div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h2>Goals</h2>
+        <div class="row">
+          <input id="goal_title" type="text" placeholder="Goal title (e.g. Train 3x/week)" />
+          <input id="goal_target" type="number" placeholder="Target workouts/week" />
+          <button id="create_goal">Create goal</button>
+        </div>
+        <ul id="goals"></ul>
+      </section>
     </div>
   </div>
   <script src="script.js"></script>

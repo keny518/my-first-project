@@ -60,6 +60,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/workouts', require('./routes/workouts'));
 app.use('/api/exercises', require('./routes/exercises'));
 app.use('/api/goals', require('./routes/goals'));
+app.use('/api/public', require('./routes/public'));
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 

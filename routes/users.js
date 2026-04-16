@@ -33,7 +33,7 @@ router.post('/register', async (req, res) => {
     );
     const user = result.rows[0];
     const token = jwt.sign({ user_id: user.user_id, name: user.name, email: user.email }, SECRET, { expiresIn: '7d' });
-    res.json({ user, token });
+    res.status(201).json({ user, token });
   } catch (err) {
     if (err.code === '23505') return res.status(409).json({ error: 'email already exists' });
     res.status(500).json({ error: 'server error', details: err.message });
@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) return res.status(401).json({ error: 'invalid credentials' });
     const token = jwt.sign({ user_id: user.user_id, name: user.name, email: user.email }, SECRET, { expiresIn: '7d' });
-    res.json({ user: { user_id: user.user_id, name: user.name, email: user.email }, token });
+    res.status(200).json({ user: { user_id: user.user_id, name: user.name, email: user.email }, token });
   } catch (err) {
     res.status(500).json({ error: 'server error', details: err.message });
   }
@@ -63,7 +63,7 @@ router.post('/login', async (req, res) => {
 
 // GET /api/users/me
 router.get('/me', authMiddleware, async (req, res) => {
-  res.json({ user: req.user });
+  res.status(200).json({ user: req.user });
 });
 
 module.exports = router;
