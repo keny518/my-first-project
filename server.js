@@ -59,6 +59,7 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/workouts', require('./routes/workouts'));
 app.use('/api/exercises', require('./routes/exercises'));
+app.use('/api/goals', require('./routes/goals'));
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
